@@ -21,6 +21,6 @@ mongoose.connect(process.env.Mongo_Url)
 .then(()=>{
     console.log('connected to database succesfully')
 })
-server.listen(5000 , ()=>{
+server.listen(process.env.PORT , ()=>{
     console.log('server is listening on port 5000')
 })
