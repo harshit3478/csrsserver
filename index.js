@@ -14,7 +14,10 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/' , require('./auth/router.js'))
-mongoose.connect('mongodb://127.0.0.1:27017/datsol?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.3')
+app.get('/' , (req,res)=>{
+    res.send('<h1> Server is running ..... </h1>')
+})
+mongoose.connect(process.env.Mongo_Url)
 .then(()=>{
     console.log('connected to database succesfully')
 })

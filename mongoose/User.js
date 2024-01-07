@@ -7,7 +7,7 @@ const UserDetails = new mongoose.Schema(
 	email : {type:String , required:true , unique:true 	}
 
 })
-const User = mongoose.model("userdetails" , UserDetails);
+const User = mongoose.model("users" , UserDetails);
 
-const Mongo_url = 'mongodb://127.0.0.1:27017/datsol?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.3';
+const Mongo_url = process.env.Mongo_Url;
 module.exports = {Mongo_url , User} 
