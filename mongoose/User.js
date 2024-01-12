@@ -2,9 +2,23 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 const UserDetails = new mongoose.Schema(
 {
-	username : {type : String , required : true , unique:true , minlength:4}, 
+	username : {type : String , required : true , minlength:4}, 
 	password : {type: String , required : true , minlength:6 },
-	email : {type:String , required:true , unique:true 	}
+	email : {type:String , required:true , unique:true 	},
+	userId : {type:String , required:true , unique:true },
+	phone : {type:String ,  unique:true 	},
+	contacts: [
+		{
+		  contact: {
+			type: String, 
+			
+		  },
+		  userId: {
+			type: String , 
+			
+		  },
+		},
+	  ],
 
 })
 const User = mongoose.model("users" , UserDetails);
