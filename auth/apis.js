@@ -26,6 +26,7 @@ exports.signup = async (req, res, next) => {
           password: hash,
           email,
           userId : userID,
+
         }).then((user) => {
           
           res.status(200).json({ status: "ok", user: user._id });
@@ -104,12 +105,12 @@ exports.logout = (req , res)=>{
 }
 
 exports.sendNotification = (req , res , next)=>{
-  const {userID, lang , long } = req.body;
+  const {userID, lang , long, content } = req.body;
   console.log(userID)
 
  var message = {
     app_id: process.env.ONESIGNAL_APP_ID,
-    contents: { en: "English Message" },
+    contents: { en: content},
     // included_segments: ['All'],
     include_player_ids: [userID],
 
@@ -117,9 +118,8 @@ exports.sendNotification = (req , res , next)=>{
     android_channel_id : "b10f20a7-642a-499a-9e68-de9b340452cb",
     small_icon: "ic_stat_onesignal_default",
     data : {
-      "langitude" : lang ,
+      "langitude" : lang,
       "longitude" : long,
-      "hello " : "harshit ",
     },
     big_picture : "https://miro.medium.com/max/1400/1*vrm-FxGlvWnI5LMXqCUSCw.jpeg",
     large_icon : "https://tse4.mm.bing.net/th?id=OIP._gPkZF9gSApIFuuOYHoWEwHaEK&pid=Api&P=0&h=180",
@@ -129,7 +129,7 @@ exports.sendNotification = (req , res , next)=>{
     color : "8a2be2",
   };
   SendNotification(message , (err , data)=>{
-    if(err) { 
+    if(err) {
       return next(err);
     }
     return res.status(200).send({status : 'ok' , message : 'notification sent successfully' , data : data , })
@@ -171,7 +171,7 @@ async function SendNotification(data , callback){
 
 
 exports.getContacts = async (req , res , next)=>{
-  const {email} = req.body;
+  const {email} = req.headers;
   console.log(email)
   try{
     const users = await User.find({});
@@ -196,6 +196,7 @@ exports.updateContacts = async (req , res , next)=>{
     console.log(email , contact)
   try{
     const user = await User.findOne({email : email});
+    const users = await User.find({});
     console.log(user);
     if(user){
       const isContact = await User.findOne({email : contact});
@@ -204,9 +205,9 @@ exports.updateContacts = async (req , res , next)=>{
         return res.status(411).send({status : 'error' , message : 'your contact is not registered with us'})
       }
       else{
-        if(user.contacts.some(c => c.contact === contact && c.userId === isContact.userId)){
+        if(user.contacts.some(c => c.contact === contact || c.userId === isContact.userId) || email == contact){
           console.log('Contact already exists' , 'index of the contact is ' , user.contacts.findIndex(c => c.contact === contact && c.userId === isContact.userId));
-          return res.status(412).send({status : 'error' , message : 'contact already exists'});
+          return res.status(412).send({status : 'error' , message : 'contact already exists or you are trying to add yourself as a contact'});
       }else{
         user.contacts.push({contact : contact , userId : isContact.userId});
       
@@ -216,7 +217,7 @@ exports.updateContacts = async (req , res , next)=>{
       }
     }
     else{
-      return res.status(411).send({status : 'error' , message : 'user not found'})
+      return res.status(411).send({status : 'error' , message : 'user not found' , users : users})
     }
   }
   catch(err){
