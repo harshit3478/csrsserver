@@ -19,8 +19,7 @@ exports.userAuth = (req, res, next) => {
         }
       });
     } else {
-      res.status(401)
-      .redirect('/')
+      res.status(401).send({ message: "Not Authorized"  , error : 'no token found' });
       // location.assign('/')
       
     }
