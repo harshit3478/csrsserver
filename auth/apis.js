@@ -118,6 +118,7 @@ exports.sendNotification = (req , res , next)=>{
     android_channel_id : "b10f20a7-642a-499a-9e68-de9b340452cb",
     small_icon: "ic_stat_onesignal_default",
     data : {
+      "type" : "redirect",
       "langitude" : lang,
       "longitude" : long,
     },
