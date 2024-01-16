@@ -1,5 +1,5 @@
 const express = require('express');
-const { login, signup, home, sendNotification, getContacts, updateContacts, deleteContact } = require('./apis');
+const { login, signup, home, sendNotification, getContacts, updateContacts, deleteContact, getCurrentUser } = require('./apis');
 const { userAuth } = require('../middleware/auth');
 const { verifyMail } = require('./sendmail');
 const router = express.Router();
@@ -13,4 +13,5 @@ router.route('/sendnotification').post(sendNotification)
 router.route('/getcontacts').get(getContacts)
 router.route('/addcontact').put(updateContacts)
 router.route('/deletecontact').put(deleteContact)
+router.route('/getcurrentuser').get(userAuth,getCurrentUser)
 module.exports = router

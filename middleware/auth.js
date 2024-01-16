@@ -3,8 +3,8 @@ require("dotenv").config();
 const jwtSecret = process.env.JWT_SECRET;
 
 exports.userAuth = (req, res, next) => {
-    console.log(req.cookies)
-  const token = req.cookies.jwt;
+  console.log(req.cookies)
+    const token = req.cookies.jwt;
   console.log(token)
   try {
     if (token) {
@@ -13,6 +13,8 @@ exports.userAuth = (req, res, next) => {
         if (err) {
           res.status(401).send({ message: "Not Authorized", error: err });
         } else {
+          console.log(decodedToken);
+          req.user = decodedToken;
           next();
         }
       });

@@ -248,3 +248,14 @@ exports.deleteContact = async (req , res , next)=>{
     return res.status(500).send({status : 'error' , message : 'server error'})
   }
 }
+
+exports.getCurrentUser = async (req , res , next)=>{
+  const {username , email} = req.user;
+  console.log(username , email);
+  if(username && email){
+    return res.status(200).send({status : 'ok' , message : 'user fetched successfully' , data : req.user})
+  }
+  else{
+    return res.status(411).send({status : 'error' , message : 'user not found'})
+  }
+}
