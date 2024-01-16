@@ -105,14 +105,14 @@ exports.logout = (req , res)=>{
 }
 
 exports.sendNotification = (req , res , next)=>{
-  const {userID, lang , long, content } = req.body;
-  console.log(userID)
+  const {userIDs, lang , long, content } = req.body;
+  console.log(userIDs)
 
  var message = {
     app_id: process.env.ONESIGNAL_APP_ID,
     contents: { en: content},
     // included_segments: ['All'],
-    include_player_ids: [userID],
+    include_player_ids: userIDs,
 
     content_available: true,
     android_channel_id : "b10f20a7-642a-499a-9e68-de9b340452cb",
@@ -121,14 +121,14 @@ exports.sendNotification = (req , res , next)=>{
       "langitude" : lang,
       "longitude" : long,
     },
-    big_picture : "https://miro.medium.com/max/1400/1*vrm-FxGlvWnI5LMXqCUSCw.jpeg",
-    large_icon : "https://tse4.mm.bing.net/th?id=OIP._gPkZF9gSApIFuuOYHoWEwHaEK&pid=Api&P=0&h=180",
+    // big_picture : "https://miro.medium.com/max/1400/1*vrm-FxGlvWnI5LMXqCUSCw.jpeg",
+    // large_icon : "https://tse4.mm.bing.net/th?id=OIP._gPkZF9gSApIFuuOYHoWEwHaEK&pid=Api&P=0&h=180",
     android_accent_color : "00bfff",
     android_led_color : "00bfff",
     android_visibility : 1,
     color : "8a2be2",
   };
-  SendNotification(message , (err , data)=>{
+  SendNotificationFunction(message , (err , data)=>{
     if(err) {
       return next(err);
     }
@@ -138,7 +138,7 @@ exports.sendNotification = (req , res , next)=>{
 }
   
 
-async function SendNotification(data , callback){
+async function SendNotificationFunction(data , callback){
   var headers = {
     "Content-Type": "application/json; charset=utf-8",
     "Authorization" : `Basic ${process.env.ONESIGNAL_API_KEY}`
