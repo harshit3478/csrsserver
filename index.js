@@ -3,30 +3,53 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
+const fs = require('fs');
 const cors = require('cors')
+const Grid = require("gridfs-stream");
+const path = require('path');
 const cookieParser = require('cookie-parser');
+const { connect } = require('http2');
+const upload = require('./middleware/upload.js');
+const connection = require('./mongoose/connection.js');
+const { User } = require('./mongoose/User.js');
+const {client} = require('./redis.js');
 app.use(cookieParser());
 
+connection();
+// const conn = mongoose.connection;
+app.use(bodyParser.urlencoded(
+  { extended: true }
+))
+// SET STORAGE
+try {
+  
+  client.connect();
+  client.on("error", err => console.log("Redis client error: ", err));
+  client.on("connect", () => console.log("Connected to redis"));
+} catch (e) {
+  console.log(e)
+}
+app.post("/upload", upload.single('avatar'), (req, res) => {
+  console.log(req.file)
+  res.send('file uploaded')
+})
 //CORS POLICY
 app.use(cors())
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:54362');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
+  res.header('Access-Control-Allow-Origin', 'http://localhost:54362');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
 });
 //body parsers
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use('/' , require('./auth/router.js'))
-app.get('/' , (req,res)=>{
-    res.send('<h1> Server is running ..... </h1>')
+app.use('/', require('./controller/router.js'))
+app.get('/', (req, res) => {
+  res.send('<h1> Server is running ..... </h1>')
 })
-mongoose.connect(process.env.Mongo_Url)
-.then(()=>{
-    console.log('connected to database succesfully')
+
+server.listen(process.env.PORT, () => {
+  console.log(`server is running on port ${process.env.PORT}`)
 })
-server.listen(process.env.PORT , ()=>{
-    console.log(`server is running on port ${process.env.PORT}`)
-})
+
