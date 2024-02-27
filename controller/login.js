@@ -153,17 +153,13 @@ exports.verifyOTPForLogin = async (req, res) => {
           // OTP verification successful
           // Proceed with login logic
           const user = await User.findOne({email: req.body.email }).exec() || await User.findOne({phone: req.body.phone}).exec();
+          console.log('user is :', user);
           const maxAge = 96 * 60 * 60 * 100 ;
-          const token = jwt.sign({ userId: user }, jwtSecret, { expiresIn: maxAge }, (err, token) => {
-              if (err) return res.status(400).json({ success: false, message: "Login error : " + err.message });
-              // return res.status(200).json({ success: true, message: "Login successful", token });
-              
-          });
+          const token = jwt.sign({ user : user }, jwtSecret, { expiresIn: maxAge });
           console.log(token);
           res.cookie("jwt", token, {
             httpOnly: true,
-            
-            maxAge: maxAge * 1000, // 3hrs in ms
+            maxAge: maxAge * 90 / 4, // 90days in ms
           });
           res.status(200).json({ success: true, message: "Logged in successfully" });
       } else {

@@ -21,9 +21,8 @@ exports.logout = (req , res)=>{
 }
 
 exports.getCurrentUser = async (req , res)=>{
-  const {username , email , imageUrl} = req.user;
-  console.log(username , email , imageUrl);
-  if(username && email){
+
+  if(req.user){
     return res.status(200).send({status : 'ok' , message : 'user fetched successfully' , data : req.user})
   }
   else{
