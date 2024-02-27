@@ -146,7 +146,7 @@ exports.verifyOTPForLogin = async (req, res) => {
           secret: secret,
           encoding: "base32",
           token: otp,
-          window: 2 // Allow 1-time step tolerance in verification
+          window: 3 // Allow 1-time step tolerance in verification
       });
       
       if (verified) {
