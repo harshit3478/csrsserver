@@ -146,13 +146,13 @@ exports.verifyOTPForLogin = async (req, res) => {
           secret: secret,
           encoding: "base32",
           token: otp,
-          window: 2 // Allow 1-time step tolerance in verification
+          window: 3 // Allow 1-time step tolerance in verification
       });
       
       if (verified) {
           // OTP verification successful
           // Proceed with login logic
-          const user = await User.findOne({email: req.body.email.toLowerCase() }).exec() || await User.findOne({phone: req.body.phone}).exec();
+          const user = await User.findOne({email: req.body.email }).exec() || await User.findOne({phone: req.body.phone}).exec();
           const maxAge = 96 * 60 * 60 * 100 ;
           const token = jwt.sign({ userId: user }, jwtSecret, { expiresIn: maxAge }, (err, token) => {
               if (err) return res.status(400).json({ success: false, message: "Login error : " + err.message });

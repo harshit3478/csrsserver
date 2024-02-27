@@ -24,15 +24,15 @@ exports.signup = async (req, res, next) => {
     catch (e) {
       return res.status(400).send({ status: "error", message: e.message, code: -5 });
     }
-    bcrypt.hash(req.body.password, 10, async function (err, hash) {
-      // Store hash in your password DB.
-      await user.set('password', hash);
-      console.log("hashed password", hash);
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ success: false, message: "Error in hashing password" });
-      }
-    });
+    // bcrypt.hash(req.body.password, 10, async function (err, hash) {
+    //   // Store hash in your password DB.
+    //   await user.set('password', hash);
+    //   console.log("hashed password", hash);
+    //   if (err) {
+    //     console.log(err);
+    //     return res.status(500).json({ success: false, message: "Error in hashing password" });
+    //   }
+    // });
 
     console.log("user registered successfully", user);
     await user.save();
@@ -140,7 +140,7 @@ exports.verifyOTPForSignup = async (req, res) => {
           secret: secret,
           encoding: "base32",
           token: otp,
-          window: 2 // Allow 1-time step tolerance in verification
+          window: 3 // Allow 1-time step tolerance in verification
       });
       
       if (verified) {
