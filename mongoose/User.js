@@ -6,6 +6,9 @@ const UserDetails = new mongoose.Schema(
 		username: { type: String,
 			 required: [true , "Name is required"],
 			},
+		rollNo : { type: String,
+			required: [true , "Roll number is required"],
+		},
 		imageUrl: {
 			type: String,
 			required: false,

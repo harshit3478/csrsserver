@@ -1,7 +1,7 @@
 const { uploadToCloudinary, removeFromCloudinary } = require('./cloudinary.js');
 const { User } = require('../mongoose/User.js');
 exports.update = async(req, res) => {
-    const {email } = req.body;
+    const {email , name  } = req.body;
     console.log(" email is ", email)
     try{
       const user = await User.findOne({email : email});
@@ -12,7 +12,8 @@ exports.update = async(req, res) => {
       },{
         $set : {
           imageUrl : data.url,
-          publicId : data.public_id
+          publicId : data.public_id,
+          username : name
         }
       });
       res.status(200).send({status : 'success' , message : 'user updated',  code : 1});

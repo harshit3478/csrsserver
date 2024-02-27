@@ -5,7 +5,6 @@ const { User } = require("../mongoose/User");
 const bcrypt = require("bcryptjs");
 const {client } = require("../redis.js")
 const {verifyMail} = require('./sendmail');
-const { GridFsStorage } = require("multer-gridfs-storage");
 const { sendSMS } = require("./sendsms.js");
 const speakeasy = require('speakeasy');
 require('dotenv').config();
@@ -110,10 +109,10 @@ exports.login = async (req, res, next) => {
             secret: secret.base32,
             encoding: "base32"
         });
-
+        console.log(otp);
         // save the secret key in the user object or database
         if (!client.isOpen) return res.status(500).json({ success: false, message: "Redis client error" , code : -4  });
-        await client.set(user.phone,  secret.base32, { EX: process.env.OTP_EXPIRE_TIME }, (err, res) => {
+        await client.set(user.phone,  secret.base32 , { EX: process.env.OTP_EXPIRE_TIME }, (err, res) => {
             if (err) {
                 console.log("error in setting redis key", err);
                 return res.status(500).json({ success: false, message: "Redis client error", code : -4 });
@@ -129,7 +128,7 @@ exports.login = async (req, res, next) => {
         res.status(400).json({ success: false, message: e.message  , code : -3})
     }
 }
-exports.verifyOTP = async (req, res) => {
+exports.verifyOTPForLogin = async (req, res) => {
   try {
       const { otp } = req.body;
       const phoneOrEmail = req.body.email || req.body.phone; 
@@ -147,7 +146,7 @@ exports.verifyOTP = async (req, res) => {
           secret: secret,
           encoding: "base32",
           token: otp,
-          window: 1 // Allow 1-time step tolerance in verification
+          window: 2 // Allow 1-time step tolerance in verification
       });
       
       if (verified) {

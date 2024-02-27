@@ -12,7 +12,7 @@ const { connect } = require('http2');
 const upload = require('./middleware/upload.js');
 const connection = require('./mongoose/connection.js');
 const { User } = require('./mongoose/User.js');
-const {client} = require('./redis.js');
+const {client}  = require('./redis.js');
 app.use(cookieParser());
 
 connection();
@@ -26,6 +26,9 @@ try {
   client.connect();
   client.on("error", err => console.log("Redis client error: ", err));
   client.on("connect", () => console.log("Connected to redis"));
+  
+  // client.FLUSHALL();
+ 
 } catch (e) {
   console.log(e)
 }

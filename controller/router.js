@@ -1,6 +1,6 @@
 const express = require('express');
-const { login, loginWithEmail, loginWithPhone, verifyOTP } = require('./login');
-const { signup } = require('./signup');
+const { login, loginWithEmail, loginWithPhone, verifyOTP, verifyOTPForLogin } = require('./login');
+const { signup, sendOtpOnEmail, sendOtpOnPhone, verifyOTPForSignup } = require('./signup');
 const { home , logout , getCurrentUser} = require('./main');
 const { sendNotification } = require('./notification');
 const { getContacts , updateContacts , deleteContact } = require('./contact');
@@ -41,7 +41,10 @@ router.post('/update', uploadFile.single('avatar'), async(req, res) => {
 router.route('/login').post(login);
 router.route('/login/email').post(loginWithEmail);
 router.route('/login/phone').post(loginWithPhone);
-router.route('/verifyOtp').post(verifyOTP);
+router.route('/login/verify').post(verifyOTPForLogin);
+router.route('/signup/verify').post(verifyOTPForSignup);
+router.route('/signup/email').post(sendOtpOnEmail);
+router.route('/signup/phone').post(sendOtpOnPhone);
 router.route('/signup').post( signup);
 router.route('/home').get(userAuth,home);
 router.route('/verifymail').post(verifyMail)
