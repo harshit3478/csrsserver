@@ -156,22 +156,16 @@ exports.verifyOTPForLogin = async (req, res) => {
           const maxAge = 96 * 60 * 60 * 100 ;
           const token = jwt.sign({ userId: user }, jwtSecret, { expiresIn: maxAge }, (err, token) => {
               if (err) return res.status(400).json({ success: false, message: "Login error : " + err.message });
-              return res.status(200).json({ success: true, message: "Login successful", token });
+              // return res.status(200).json({ success: true, message: "Login successful", token });
               
           });
-          // const token = jwt.sign(
-          //   {userId : user } ,  , 
-          //   {
-          //     expiresIn: maxAge, // 3hrs in sec
-          //   }
-          // );
           console.log(token);
           res.cookie("jwt", token, {
             httpOnly: true,
             
             maxAge: maxAge * 1000, // 3hrs in ms
           });
-          // res.status(200).json({ success: true, message: "OTP verification successful" });
+          res.status(200).json({ success: true, message: "Logged in successfully" });
       } else {
           // OTP verification failed
           res.status(400).json({ success: false, message: "Invalid OTP" });
