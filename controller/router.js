@@ -48,11 +48,11 @@ router.route('/signup/phone').post(sendOtpOnPhone);
 router.route('/signup').post( signup);
 router.route('/home').get(userAuth,home);
 router.route('/verifymail').post(verifyMail)
-router.route('/sendnotification').post(sendNotification)
+router.route('/send/notification').post(sendNotification)
 router.route('/getcontacts').get(getContacts)
-router.route('/addcontact').put(updateContacts)
-router.route('/deletecontact').put(deleteContact)
+router.route('/add/contact').put(updateContacts)
+router.route('/delete/contact').put(deleteContact)
 router.route('/getcurrentuser').get(userAuth,getCurrentUser)
-router.route('/sendsms').post(sendSMS);
+router.route('/send/sms').post(sendSMS);
 router.route('/newemergency').post(require('./webapis').newEmergency);
 module.exports = router
