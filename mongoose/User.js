@@ -40,14 +40,23 @@ const UserDetails = new mongoose.Schema(
 		},
 		contacts: [
 			{
-				contact: {
+				contactName: {
 					type: String,
 					required: [true, 'Contact is required'],
 				},
 				userId: {
 					type: String,
-					required: [true, 'User Id is required'],
 				},
+				contactPhone:{
+					type: String,
+				},
+				contactImageUrl:{
+					type: String,
+				},
+				isUser :{
+					type : Boolean,
+					default : false
+				}
 			},
 		],
 	}, {
@@ -75,7 +84,7 @@ const UserDetails = new mongoose.Schema(
 		}
 	}
 });
-UserDetails.plugin(uniqueValidator, { message: "This {PATH} is already registered" })
+UserDetails.plugin(uniqueValidator, { message: "This {PATH} is already registered" });
 
 const User = mongoose.models.user || mongoose.model("users", UserDetails);
 
