@@ -14,24 +14,37 @@ const { User } = require("../mongoose/User");
 const uploadFile = require('../middleware/upload.js');
 console.log(typeof(update) , typeof(uploadFile));
 router.post('/update', uploadFile.single('avatar'), async(req, res) => {
-    const {email } = req.body;
-    console.log(email)
+    const {email , name , rollNO } = req.body;
+    console.log(email , name )
     try{
       const user = await User.findOne({email : email});
       console.log(user);
       if(!user) return res.status(411).send({status : 'error' , message : 'user not found',  code : -1});
     
       const data = await uploadToCloudinary(req.file.path , "user-images");
-        console.log(data);
-   
+        console.log('cloudinary data is : ', data);
+      if(data){
       const updatedUser = await User.updateOne({
         email : email ,
       },{
         $set : {
           imageUrl : data.url,
-          publicId : data.public_id
+          publicId : data.public_id,
+          username : name,
+          rollNo : rollNO,
+
         }
       });
+    }else{
+      const updatedUser = await User.updateOne({
+        email : email ,
+      },{
+        $set : {
+          username : name,
+          rollNo : rollNO,
+        }
+      });
+    }
       res.status(200).send({status : 'success' , message : 'user updated',  code : 1});
     }
     catch(err){
@@ -39,6 +52,7 @@ router.post('/update', uploadFile.single('avatar'), async(req, res) => {
     }
   });
 router.route('/login').post(login);
+router.route('/update/token').post(update.updateToken);
 router.route('/login/email').post(loginWithEmail);
 router.route('/login/phone').post(loginWithPhone);
 router.route('/login/verify').post(verifyOTPForLogin);
