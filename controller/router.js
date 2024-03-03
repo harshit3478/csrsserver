@@ -2,7 +2,7 @@ const express = require('express');
 const { login, loginWithEmail, loginWithPhone, verifyOTP, verifyOTPForLogin } = require('./login');
 const { signup, sendOtpOnEmail, sendOtpOnPhone, verifyOTPForSignup } = require('./signup');
 const { home , logout , getCurrentUser} = require('./main');
-const { sendNotification } = require('./notification');
+const { sendNotificationSNS } = require('./notification');
 const { getContacts , updateContacts , deleteContact } = require('./contact');
 const { userAuth } = require('../middleware/auth');
 const { verifyMail } = require('./sendmail');
@@ -62,7 +62,7 @@ router.route('/signup/phone').post(sendOtpOnPhone);
 router.route('/signup').post( signup);
 router.route('/home').get(userAuth,home);
 router.route('/verifymail').post(verifyMail)
-router.route('/send/notification').post(sendNotification)
+router.route('/send/notification').post(sendNotificationSNS);
 router.route('/getcontacts').get(getContacts)
 router.route('/add/contact').put(updateContacts)
 router.route('/delete/contact').put(deleteContact)
