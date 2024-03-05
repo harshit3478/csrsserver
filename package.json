@@ -36,6 +36,7 @@
     "multer-gridfs-storage": "^4.2.0",
     "netlify-cli": "^17.9.0",
     "netlify-lambda": "^2.0.16",
+    "nodemailer": "^6.9.11",
     "nodemon": "^3.0.1",
     "redis": "^4.6.13",
     "serverless-http": "^3.2.0",
