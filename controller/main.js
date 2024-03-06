@@ -23,7 +23,9 @@ exports.logout = (req , res)=>{
 exports.getCurrentUser = async (req , res)=>{
 
   if(req.user){
-    return res.status(200).send({status : 'ok' , message : 'user fetched successfully' , data : req.user})
+    console.log('req.user is : ' , req.user.user.email);
+    const user = await User.findOne({email : req.user.user.email});
+    return res.status(200).send({status : 'ok' , message : 'user fetched successfully' , data : user});
   }
   else{
     return res.status(411).send({status : 'error' , message : 'user not found'})
