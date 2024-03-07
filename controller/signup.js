@@ -146,6 +146,17 @@ exports.verifyOTPForSignup = async (req, res) => {
       if (verified) {
           // OTP verification successful
           // Proceed with login logic
+          //setting the cookie here 
+          const user = {
+            email : req.body.email,
+          }
+          const maxAge = 96 * 60 * 60 * 100 ;
+          const token = jwt.sign({ user : user }, jwtSecret, { expiresIn: maxAge });
+          console.log(token);
+          res.cookie("jwt", token, {
+            httpOnly: true,
+            maxAge: maxAge * 90 / 4, // 90days in ms
+          });
           res.status(200).json({ success: true, message: "OTP verification successful" });
           // res.status(200).json({ success: true, message: "OTP verification successful" });
       } else {
