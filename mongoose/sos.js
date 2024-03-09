@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
-
+const moment = require('moment-timezone');
 const EmergencySchema = new mongoose.Schema({
   name: {
+    type: String,
+    required: true,
+  },
+  token: {
     type: String,
     required: true,
   },
@@ -33,10 +37,14 @@ const EmergencySchema = new mongoose.Schema({
 
   createdOn: {
     type: Date,
-    default: Date.now,
+    default:moment().tz('Asia/Kolkata').format(),
   },
   resolvedOn: {
     type: Date,
+    required: false,
+  },
+  timeTakenToResolve: {
+    type: String,
     required: false,
   },
 });
