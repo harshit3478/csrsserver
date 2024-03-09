@@ -56,7 +56,7 @@ exports.updateContacts = async (req, res, next) => {
       }
     }
     else {
-      return res.status(411).send({ status: 'error', message: 'user not found', users: users })
+      return res.status(411).send({ status: 'error', message: 'user not found'})
     }
   }
   catch (err) {

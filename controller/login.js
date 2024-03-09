@@ -72,7 +72,7 @@ exports.login = async (req, res, next) => {
             secret: secret.base32,
             encoding: "base32"
         });
-
+        console.log('otp is ' , otp);
         // save the secret key in the user object or database
         if (!client.isOpen) return res.status(500).json({ success: false, message: "Redis client error" , code : -4  });
         await client.set(user.email,  secret.base32, { EX: process.env.OTP_EXPIRE_TIME }, (err, res) => {
