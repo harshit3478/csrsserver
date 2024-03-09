@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 const moment = require('moment-timezone');
+const indianTimeZone = 'Asia/Kolkata'; // Indian Standard Time (IST)
+        const utcNow = new Date();
+        const istDateTime = new Date(utcNow.toLocaleString('en-US', { timeZone: indianTimeZone }));
 const EmergencySchema = new mongoose.Schema({
   user:{
     username: { type: String,
@@ -77,7 +80,7 @@ const EmergencySchema = new mongoose.Schema({
   },
   createdOn: {
     type: Date,
-    default:moment().tz('Asia/Kolkata').format(),
+    default:istDateTime,
   },
   resolvedOn: {
     type: Date,
