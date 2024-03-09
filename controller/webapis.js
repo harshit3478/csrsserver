@@ -1,9 +1,20 @@
+const { User } = require('../mongoose/User');
 const { Emergency } = require('../mongoose/sos');
 const moment = require('moment-timezone');
 exports.newEmergency = async (req, res) => {
 
     try {
-        const emergency = await Emergency.create(req.body);
+        const { latitude, longitude, landmark, status } = req.body;
+        console.log("email is : " , req.body.email);
+        const user = await User.findOne({email : req.body.email});
+        console.log("user is : ", user)
+        const emergency = await Emergency.create({
+            latitude: latitude,
+            longitude: longitude,
+            landmark: landmark,
+            status: status,
+            user: user,
+        });
         res.status(200).send({ status: "ok", message: "emergency registered", data: emergency, code: 1 });
     } catch (error) {
         console.log(error, "error in newEmergency is : ");
