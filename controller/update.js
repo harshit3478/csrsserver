@@ -1,5 +1,6 @@
 const { uploadToCloudinary, removeFromCloudinary } = require('./cloudinary.js');
 const { User } = require('../mongoose/User.js');
+const { Emergency } = require('../mongoose/sos.js');
 exports.updateToken = async(req, res) => {
     const {email , token } = req.body;
     console.log(" email is ", email)

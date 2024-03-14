@@ -12,6 +12,9 @@ const update = require('./update');
 const router = express.Router();
 const { User } = require("../mongoose/User");
 const uploadFile = require('../middleware/upload.js');
+const { adminLogin } = require('./admin.js');
+const { socket } = require('./socket.js');
+const { updateSensitivity, updateDescription, updateEmergency } = require('./webapis');
 console.log(typeof (update), typeof (uploadFile));
 router.post('/update', uploadFile.single('avatar'), async (req, res) => {
   const { email, name, rollNo } = req.body;
@@ -70,4 +73,9 @@ router.route('/send/sms').post(sendSMS);
 router.route('/emergency/new').post(require('./webapis').newEmergency);
 router.route('/emergency/get').get(require('./webapis').getEmergencies);
 router.route('/emergency/resolve').put(require('./webapis').resolveEmergency);
+router.route('/login/admin').post(adminLogin);
+router.route('/socket').get(socket);
+router.route('/emergency/update/sensitivity').put(updateSensitivity);
+router.route('/emergency/update/description').put(updateDescription);
+router.route('/emergency/update').put(updateEmergency);
 module.exports = router

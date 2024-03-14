@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const moment = require('moment-timezone');
-const indianTimeZone = 'Asia/Kolkata'; // Indian Standard Time (IST)
-        const utcNow = new Date();
-        const istDateTime = new Date(utcNow.toLocaleString('en-US', { timeZone: indianTimeZone }));
+const indianTimeZone = 'Asia/Delhi'; // Indian Standard Time (IST)
+// const dateIndia = moment.tz(Date.now(), "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss)");
+// console.log(dateIndia);
 const EmergencySchema = new mongoose.Schema({
   user:{
     username: { type: String,
@@ -21,7 +21,7 @@ const EmergencySchema = new mongoose.Schema({
    },
    email: {
      type: String, required: [true, 'email is required'],
-     unique: [true, 'email is already registered'],
+
      validate: {
        validator: function (v) {
          // Regular expression for email validation
@@ -80,7 +80,7 @@ const EmergencySchema = new mongoose.Schema({
   },
   createdOn: {
     type: Date,
-    default:istDateTime,
+    default: () => moment().tz(indianTimeZone).toDate(), // Store current time in IST
   },
   resolvedOn: {
     type: Date,
@@ -90,7 +90,16 @@ const EmergencySchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  description: {
+    type: String,
+    required: false,
+  },
+  sensitivity: {
+    type: String,
+    required: false,
+  },
 });
+
 
 const Emergency = mongoose.model("emergency", EmergencySchema);
 module.exports = { Emergency };
