@@ -20,7 +20,7 @@ app.use(cookieParser());
 const io = new Server(server ,
   {
     cors: {
-      origin: "https://csrsweb.vercel.app",
+      origin: "http://localhost:3000",
       methods: ["GET", "POST"]
     }
   });
@@ -45,11 +45,10 @@ app.use(bodyParser.urlencoded(
 // SET STORAGE
 try {
   
-  // client.connect();
-  // client.on("error", err => console.log("Redis client error: ", err));
-  // client.on("connect", () => console.log("Connected to redis"));
+  client.connect();
+  client.on("error", err => console.log("Redis client error: ", err));
+  client.on("connect", () => console.log("Connected to redis"));
   
-  // client.FLUSHALL();
  
 } catch (e) {
   console.log(e)
