@@ -58,15 +58,17 @@ app.post("/upload", upload.single('avatar'), (req, res) => {
   res.send('file uploaded')
 })
 //CORS POLICY
-app.use(cors())
+app.use(cors(
+  // l{origin: ['https://csrsweb.vercel.app/', '*']}
+))
 app.use(express.json());
 
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type');
-//   next();
-// });
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 //body parsers
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
