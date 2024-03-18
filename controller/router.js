@@ -71,7 +71,7 @@ router.route('/delete/contact').put(deleteContact)
 router.route('/getcurrentuser').get(userAuth, getCurrentUser)
 router.route('/send/sms').post(sendSMS);
 router.route('/emergency/new').post(require('./webapis').newEmergency);
-router.route('/emergency/get').get(userAuth, getEmergencies);
+router.route('/emergency/get').get(getEmergencies);
 router.route('/emergency/resolve').put(require('./webapis').resolveEmergency);
 router.route('/login/admin').post(adminLogin);
 router.route("/get/admin").get(userAuth , getCurrentAdminUser);
