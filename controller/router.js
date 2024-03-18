@@ -12,9 +12,9 @@ const update = require('./update');
 const router = express.Router();
 const { User } = require("../mongoose/User");
 const uploadFile = require('../middleware/upload.js');
-const { adminLogin } = require('./admin.js');
+const { adminLogin, getCurrentAdminUser } = require('./admin.js');
 const { socket } = require('./socket.js');
-const { updateSensitivity, updateDescription, updateEmergency } = require('./webapis');
+const { updateSensitivity, updateDescription, updateEmergency, getEmergencies } = require('./webapis');
 console.log(typeof (update), typeof (uploadFile));
 router.post('/update', uploadFile.single('avatar'), async (req, res) => {
   const { email, name, rollNo } = req.body;
@@ -71,9 +71,10 @@ router.route('/delete/contact').put(deleteContact)
 router.route('/getcurrentuser').get(userAuth, getCurrentUser)
 router.route('/send/sms').post(sendSMS);
 router.route('/emergency/new').post(require('./webapis').newEmergency);
-router.route('/emergency/get').get(require('./webapis').getEmergencies);
+router.route('/emergency/get').get(userAuth, getEmergencies);
 router.route('/emergency/resolve').put(require('./webapis').resolveEmergency);
 router.route('/login/admin').post(adminLogin);
+router.route("/get/admin").get(userAuth , getCurrentAdminUser);
 router.route('/socket').get(socket);
 router.route('/emergency/update/sensitivity').put(updateSensitivity);
 router.route('/emergency/update/description').put(updateDescription);
