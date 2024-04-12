@@ -74,7 +74,7 @@ router.route('/emergency/new').post(require('./webapis').newEmergency);
 router.route('/emergency/get').get(getEmergencies);
 router.route('/emergency/resolve').put(require('./webapis').resolveEmergency);
 router.route('/login/admin').post(adminLogin);
-router.route("/get/admin").get(userAuth , getCurrentAdminUser);
+router.route("/get/admin").get(getCurrentAdminUser);
 router.route('/socket').get(socket);
 router.route('/emergency/update/sensitivity').put(updateSensitivity);
 router.route('/emergency/update/description').put(updateDescription);

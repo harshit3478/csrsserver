@@ -60,7 +60,10 @@ app.use('/', require('./controller/router.js'));
 app.get('/', (req, res) => {
   res.send('<h1> Server is running ..... </h1>');
 });
-
+app.post('/heartbeat', (req, res) => {
+  console.log('Received heartbeat from client.');
+  res.sendStatus(200); // Respond with a success status code
+});
 // Starting the server
 server.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);

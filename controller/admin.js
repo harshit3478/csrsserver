@@ -20,11 +20,11 @@ exports.adminLogin = async (req, res) => {
             }
         );
         console.log(token);
-        res.cookie("jwt", token, {
+        res.header("jwt", token, {
             httpOnly: true,
             maxAge: maxAge * 1000,
         });
-        return res.status(200).send({ status: "ok", message: "admin logged in", code: 1 });
+        return res.status(200).send({ status: "ok", message: "admin logged in", code: 1 , token : token });
     }
     catch (error) {
         console.log('error in adminLogin is : ', error);
@@ -34,14 +34,15 @@ exports.adminLogin = async (req, res) => {
 
 exports.getCurrentAdminUser = async (req, res) => {
     try {
-        if (req.user) {
-            console.log('req.user is : ', req.user);
-            const user = await Admin.findOne({ name: req.user.name });
-            return res.status(200).send({ status: 'ok', message: 'user fetched successfully', data: user });
+        //decoding the token 
+        const token = req.headers.jwt;
+        const decoded = jwt.verify(token, jwtSecret);
+        console.log(decoded);
+        const admin = await Admin.findOne({ name: decoded.name });
+        if (!admin) {
+            return res.status(411).send({ status: "error", message: "admin not found", code: -2 });
         }
-        else {
-            return res.status(411).send({ status: 'error', message: 'user not found' })
-        }
+        return res.status(200).send({ status: "ok", message: "admin found", data: admin });
     }
     catch (error) {
         console.log('error in checkAdminLogin is : ', error);
