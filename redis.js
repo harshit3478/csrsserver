@@ -1,13 +1,13 @@
-const { Socket } = require("dgram");
+// const { Socket } = require("dgram");
 const { createClient } = require("redis");
 
 const client = createClient({
-    // url : process.env.REDIS_URL,
+    username : 'default',
     password : process.env.REDIS_PASSWORD,
     socket : {
         ssl : true,
         host : process.env.REDIS_URL,
-        port : 17120,
+        port : 11539,
     }
 });
 
