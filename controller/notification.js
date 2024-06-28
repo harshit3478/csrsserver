@@ -2,8 +2,8 @@ const AWS = require("aws-sdk");
 require("dotenv").config();
 const firebaseAdmin = require("firebase-admin");
 AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
     region: "ap-south-1",
 });
 class MySNS {
@@ -12,7 +12,7 @@ class MySNS {
     }   
 }
 
-const ApplicationArn = process.env.AWS_APPLICATION_ARN;
+const ApplicationArn = process.env.APPLICATION_ARN;
 console.log(ApplicationArn);
 const sns = new AWS.SNS();
 const serviceAccount = require("./service.json");
@@ -41,7 +41,7 @@ async function sendPushNotification(message, fcmToken, targetArn) {
         return data.MessageId;
     } catch (error) {
         console.error("Error sending push notification:", error);
-        throw error;
+        // throw error;
     }
 }
 async function registerEndPoint(deviceToken, applicationArn) {
@@ -74,6 +74,7 @@ exports.sendNotificationSNS = async (req, res) => {
         const topicArn = await registerEndPoint(req.body.token, ApplicationArn);
         console.log("topicArn is : ", topicArn.toString());
         sendPushNotification(message, token, topicArn.toString());
+        console.log('hii how you doing ....');
         return res
             .status(200)
             .send({
