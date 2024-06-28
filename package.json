@@ -2,13 +2,13 @@
   "name": "socket.io",
   "version": "1.0.0",
   "description": "",
-  "main": "webpack --config webpack.config.js",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install"
+    "build": "webpack --config webpack.config.js"
   },
-  "author": "",
+  "author": "Harshit & Sam",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-sns": "^3.523.0",
