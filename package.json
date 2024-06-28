@@ -2,7 +2,7 @@
   "name": "socket.io",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "webpack --config webpack.config.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -46,6 +46,8 @@
     "tailwindcss": "^3.3.6"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
   }
 }
