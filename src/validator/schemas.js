@@ -1,7 +1,6 @@
 const Joi = require('joi');
-const { getContacts } = require('../../controller/contact');
-const { getEmergencies } = require('../../controller/webapis');
-const { login } = require('../../controller/login');
+
+
 
 const authSchemas = {
     Admin : Joi.object({
