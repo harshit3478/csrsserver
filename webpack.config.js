@@ -1,14 +1,16 @@
-const path = require("path");
-// const webpack = require('webpack');
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const path = require('path');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 module.exports = {
-  entry: "./index.js",
+  // Entry point of your application
+  entry: './index.js',
+
+  // Output configuration
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
   },
+
   resolve: {
-    extensions: [".js"],
     alias: {
       "node-fetch": "node-fetch/browser",
     },
@@ -19,19 +21,38 @@ module.exports = {
       child_process: false,
     },
   },
-  plugins: [new NodePolyfillPlugin()],
+
+  plugins: [
+    new NodePolyfillPlugin(),
+  ],
+  // Module rules for handling different file types
   module: {
     rules: [
+        {
+            test: /yaml/,
+            use: 'ignore-loader'
+          },
       {
         test: /\.js$/,
-        exclude: /node_modules\/(?!(swagger-jsdoc)\/).*/,
+        exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ["@babel/preset-env"],
+            presets: ['@babel/preset-env'],
           },
         },
       },
+      // Rules for other file types can be added here
     ],
+  },
+
+  // Development tools
+  devtool: 'source-map', // Enable source maps for debugging
+
+  // Development server configuration
+  devServer: {
+    static: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000,
   },
 };

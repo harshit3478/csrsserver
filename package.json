@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js --mode development"
+    "build": "webpack --mode production",
+    "clean": "node _build -c"
   },
   "author": "Harshit & Sam",
   "license": "ISC",
@@ -56,11 +57,18 @@
   "devDependencies": {
     "@babel/core": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
+    "adm-zip": "^0.5.14",
     "babel-loader": "^9.1.3",
+    "css-loader": "^7.1.2",
+    "fs-extra": "^11.2.0",
+    "ignore-loader": "^0.1.2",
+    "js-loader": "^0.1.1",
+    "minimist": "^1.2.8",
     "nodemon": "^3.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "webpack": "^5.92.1",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4"
   }
 }
