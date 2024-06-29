@@ -8,6 +8,7 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const fs = require("fs");
 const path = require("path");
+const { client } = require('./redis');
 
 
 // Load environment variables
@@ -106,3 +107,10 @@ db.once("open", function callback() {
   });
 });
 
+try {
+  client.connect();
+  client.on("error", err => console.log("Redis client error: ", err));
+  client.on("connect", () => console.log("Connected to redis"));
+} catch (e) {
+  console.log(e)
+}
