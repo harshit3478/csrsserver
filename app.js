@@ -36,7 +36,12 @@ const options = {
     servers: [
       {
         url: `http://localhost:${process.env.PORT || 8001}`,
+        description : "Development server"
       },
+      {
+        url: `http://13.201.246.48:${process.env.PORT || 8001}`,
+        description : "Production server"
+      }
     ],
   },
   apis: [
