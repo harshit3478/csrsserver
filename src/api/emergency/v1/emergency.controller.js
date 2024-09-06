@@ -62,7 +62,7 @@ const getEmergencies = async (req, res) => {
         try {
             // id will be in path params 
 
-            console.log(req);
+            // console.log(req);
 
             const result = await emergencyServices.getEmergencyById(req);
             if (result.status && result.status !== 200) {

@@ -47,7 +47,7 @@ const successResponse = (res, data, message = "success") => {
       code,
       data,
     };
-    return res.status(code).json(result);
+    return res.status(parseInt(code)).json(result);
   };
   
   module.exports = {

@@ -1,15 +1,14 @@
-const express = require('express');
-const http = require('http');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const express = require("express");
+const http = require("http");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const fs = require("fs");
 const path = require("path");
-const { client } = require('./redis');
-
+const { client } = require("./redis");
 
 // Load environment variables
 require("dotenv").config();
@@ -36,12 +35,12 @@ const options = {
     servers: [
       {
         url: `http://localhost:${process.env.PORT || 8001}`,
-        description : "Development server"
+        description: "Development server",
       },
       {
         url: `http://13.201.246.48:${process.env.PORT || 8001}`,
-        description : "Production server"
-      }
+        description: "Production server",
+      },
     ],
   },
   apis: [
@@ -60,7 +59,7 @@ function validateSpecFiles(filePaths) {
       console.error(`Swagger spec file not found: ${files}`);
       throw new Error(`Swagger spec file not found: ${files}`);
     }
-    const content = fs.readFileSync(files, 'utf8');
+    const content = fs.readFileSync(files, "utf8");
     if (!content) {
       console.error(`Swagger spec file is empty or invalid: ${files}`);
       throw new Error(`Swagger spec file is empty or invalid: ${files}`);
@@ -80,12 +79,12 @@ try {
 app.use("/", require("./src/api/api.router"));
 
 // Default route
-app.get('/', (req, res) => {
-  res.send('<h1> Server is running ..... </h1>');
+app.get("/", (req, res) => {
+  res.send("<h1> Server is running ..... </h1>");
 });
 
-app.post('/heartbeat', (req, res) => {
-  console.log('Received heartbeat from client.');
+app.post("/heartbeat", (req, res) => {
+  console.log("Received heartbeat from client.");
   res.sendStatus(200); // Respond with a success status code
 });
 
@@ -95,8 +94,6 @@ app.use((req, res, next) => {
     message: "Something went wrong",
   });
 });
-
-
 
 // Server and MongoDB setup
 const port = process.env.PORT || 8001;
@@ -117,5 +114,5 @@ try {
   client.on("error", err => console.log("Redis client error: ", err));
   client.on("connect", () => console.log("Connected to redis"));
 } catch (e) {
-  console.log(e)
+  console.log(e);
 }

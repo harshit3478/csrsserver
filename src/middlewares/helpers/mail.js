@@ -33,6 +33,7 @@ exports.sendMail = async (to, isRegister) => {
         }
       }
     );
+    console.log('value for the key is ' , await client.get(to))
 
     const mailOptions = {
       from: `Datsol solutions <${process.env.MAIL_USER}> `,
