@@ -10,30 +10,49 @@ const transporter = createTransport({
   },
 });
 
+
 exports.sendMail = async (to, isRegister) => {
   try {
-    const secret = speakeasy.generateSecret({ length: 20 });
-    // console.log(secret);
-    const otp = speakeasy.totp({
-      secret: secret.base32,
-      encoding: "base32",
-    });
-    // console.log(otp, 'secret base 32 is', secret.base32);
-    // save the secret key in the user object or database
-    if (!client.isOpen)
-        throw new Error("Redis client is not open");
-    await client.set(
-      to,
-      secret.base32,
-      { EX: process.env.OTP_EXPIRE_TIME },
-      (err, res) => {
-        if (err) {
-          console.log("error in setting redis key", err);
-          throw new Error("Redis client error" , err);
-        }
+    console.log('value of the to is ', to);
+    let otp;
+    let secret;
+
+    if (client.isOpen) {
+      const existingSecret = await client.get(to);
+      if (existingSecret) {
+        secret = { base32: existingSecret };
+        otp = speakeasy.totp({
+          secret: existingSecret,
+          encoding: 'base32'
+        });
       }
-    );
-    console.log('value for the key is ' , await client.get(to))
+    }
+
+    if (!otp) {
+      secret = speakeasy.generateSecret({ length: 20 });
+      otp = speakeasy.totp({
+        secret: secret.base32,
+        encoding: 'base32'
+      });
+
+      if (!client.isOpen) {
+        throw new Error("Redis client is not open");
+      }
+
+      await client.set(
+        to,
+        secret.base32,
+        { EX: process.env.OTP_EXPIRE_TIME },
+        (err, res) => {
+          if (err) {
+            console.log("error in setting redis key", err);
+            throw new Error("Redis client error", err);
+          }
+        }
+      );
+    }
+
+    console.log('value for the key is ', await client.get(to));
 
     const mailOptions = {
       from: `Datsol solutions <${process.env.MAIL_USER}> `,

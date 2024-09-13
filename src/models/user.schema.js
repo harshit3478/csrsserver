@@ -10,6 +10,18 @@ const UserSchema = new Schema({
         unique: true,
         required: true,
     },
+    password:{
+        type: String,
+        required: true,
+    },
+    hall:{
+        type: String,
+        required: false,
+    },
+    address:{
+        type: String,
+        required: false,
+    },
     phone:{
         type:String,
         required: true,

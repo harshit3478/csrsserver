@@ -45,6 +45,8 @@ const options = {
   },
   apis: [
     "./src/api/auth/v1/auth.router.js",
+    "./src/api/auth/v2/auth.router.js",
+    "./src/api/user/v2/user.router.js",
     "./src/api/contacts/v1/contacts.router.js",
     "./src/api/emergency/v1/emergency.router.js",
     "./src/api/admin/v1/admin.router.js",
@@ -96,7 +98,7 @@ app.use((req, res, next) => {
 });
 
 // Server and MongoDB setup
-const port = process.env.PORT || 8001;
+const port = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URL);
 

@@ -32,6 +32,39 @@ const authSchemas = {
     }),
 }
 
+const authSchemasV2= {
+    signup : Joi.object({
+        email: Joi.string().email().required(),
+        phone: Joi.string().length(10).required(),
+        name: Joi.string().required(),
+        rollNo: Joi.string().required(),
+        password: Joi.string().required(),
+        deviceToken: Joi.string().required()
+    }),
+    loginWithPassword : Joi.object({
+        email : Joi.string().email().required(),
+        password : Joi.string().required()
+    }),
+    loginWithGoogle : Joi.object({
+        idToken : Joi.string().required()
+    }),
+    updatePassword : Joi.object({
+        email : Joi.string().email().required(),
+        password : Joi.string().required()
+    }),
+
+    
+}
+
+const userSchemasV2 = {
+    updateProfile : Joi.object({
+        email: Joi.string().email().required(),
+        phone: Joi.string().length(10).required(),
+        name: Joi.string().required(),
+        rollNo: Joi.string().required(),
+        imageUrl: Joi.string().required()
+    })
+}
 const contactSchemas = {
     getContacts: Joi.object({
         id: Joi.string().required()
@@ -75,4 +108,4 @@ const adminSchemas = {
         password: Joi.string().min(4).required()
     })
 }
-module.exports = { authSchemas , contactSchemas , EmergencySchemas ,adminSchemas}
+module.exports = { authSchemas ,authSchemasV2,userSchemasV2, contactSchemas , EmergencySchemas ,adminSchemas}
