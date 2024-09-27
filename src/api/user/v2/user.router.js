@@ -47,4 +47,40 @@ router.post(
   userController.updateProfile
 );
 
+/**
+ * @swagger
+ * /user/v2/send/notification:
+ *   post:
+ *     summary: send push notification
+ *     tags: [User V2]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               lat:
+ *                 type: string
+ *               long: 
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+
+router.post(
+  '/send/notification',
+  userController.notificationAPI);
+
 module.exports = router;

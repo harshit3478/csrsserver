@@ -86,8 +86,8 @@ const contactSchemas = {
 const EmergencySchemas = {
     addEmergency : Joi.object({
         email : Joi.string().email().required(),
-        latitude : Joi.number().required(),
-        longitude : Joi.number().required(),
+        latitude : Joi.string().required(),
+        longitude : Joi.string().required(),
         landmark : Joi.string().required(),
     }),
     updateStatus : Joi.object({

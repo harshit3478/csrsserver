@@ -20,5 +20,17 @@ const updateProfile = async (req, res) => {
         return responses.internalFailureResponse(res, err);
     }
 }
+const notificationAPI = async (req, res)=>{
+    try{
+        const result = await userServices.notificationAPI({body:req.body});
+        if(result.status && result.status !== 200){
+            return responses.generateResponse(res, false, result.message, result.status);
+        }
+        return responses.successResponse(res, result.data);
 
-module.exports = { updateProfile }
+    }catch(err){
+        console.log(err);
+        return responses.internalFailureResponse(res, err);
+    }
+}
+module.exports = { updateProfile , notificationAPI }

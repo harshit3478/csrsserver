@@ -1,9 +1,12 @@
 const { client } = require("../../../../redis");
 const io = require("../../../../socketConfig");
+const sendNotification = require("../../../middlewares/helpers/notification");
 const { Contact } = require("../../../models/contact.schema");
 const { SOS } = require("../../../models/sos.schema");
 const { User } = require("../../../models/user.schema");
 const date = require('date-fns')
+const { differenceInMilliseconds, parseISO } = require('date-fns');
+const { zonedTimeToUtc } = require('date-fns-tz');
 // console.log("io is : ",io);
 const initiateEmergency = async ({ body }) => {
   try {
@@ -25,18 +28,14 @@ const initiateEmergency = async ({ body }) => {
     if (!client.isOpen) throw new Error("Redis client is not open");
     await client.set(
       "emergency:" + emergency._id,
-      emergency,
-      { EX: 7776000 },
-      (err, res) => {
-        if (err) {
-          console.log("error in setting redis key", err);
-          throw new Error("Redis client error" , err);
-        }
-      }
+      JSON.stringify(emergency),
+      "EX",
+      7776000
     );
     
     if (io) {
-      io.emit("emergency-created", { emergency, user });
+      // const newEmergency = {...emergency , user}
+      io.emit("emergency-created", { ...emergency.toObject(), user });
       console.log("emergency created and emitted");
     } else {
       console.log("Socket.io is not initialized or emit is not a function");
@@ -90,7 +89,7 @@ const getEmergencies = async () => {
     if (emergenciesInRedis.length > 0) {
       const emergencies = [];
         for (let i = 0; i < emergenciesInRedis.length; i++) {
-        emergencies.push(emergency);
+        emergencies.push(emergenciesInRedis[i]);
       }
     }
 
@@ -112,11 +111,6 @@ const getEmergencyById = async ({ params }) => {
     // console.log(params, "body in get emergency by id")
     const { id } = params;
     // check if the emergency exists in redis or not
-    if (!client.isOpen) throw new Error("Redis client is not open");
-    const emergencyInRedis = await client.get("emergency:" + id);
-    if (emergencyInRedis) {
-      return { status: 200, data: emergencyInRedis };
-    }
 
     const emergency = await SOS.findOne({ _id: id });
     if (!emergency) {
@@ -125,7 +119,7 @@ const getEmergencyById = async ({ params }) => {
     const user = await User.findOne({ email: emergency.email });
 
     const contacts = await Contact.find({ userId: user._id });
-
+    console.log({ ...emergency._doc, user: user, contacts: contacts} )
     return {
       status: 200,
       data: { ...emergency._doc, user: user, contacts: contacts },
@@ -136,60 +130,56 @@ const getEmergencyById = async ({ params }) => {
   }
 };
 
+
 const resolveEmergency = async ({ body }) => {
   try {
     const { id, sensitivity, description, respondedBy } = body;
     const emergency = await SOS.findOne({ _id: id });
+    
     if (!emergency) {
       return { status: 400, message: "Emergency does not exist" };
     }
-    // Convert time fields to Indian time standard strings
-    console.log(emergency.createdOn);
-    const resolvedOnIndianTime = new Date().toLocaleString("en-IN");
-    const resolvedOnParsed = date.parse(resolvedOnIndianTime , "M/d/yyyy, h:mm:ss a", new Date());
-    const createdOnParsed = date.parse(emergency.createdOn , "M/d/yyyy, h:mm:ss a", new Date());
-    // emergency.createdOn is in indian local time standard string
-    console.log('resolvedOnParsed', resolvedOnParsed)
-    console.log('createdOnParsed', createdOnParsed)
-    const timeTakenMs = date.differenceInMilliseconds( resolvedOnParsed , createdOnParsed);
-    console.log('time diff ' , timeTakenMs)
-    const timeTakenSeconds = Math.floor((timeTakenMs / 1000) % 60);
-    const timeTakenMinutes = Math.floor((timeTakenMs / (1000 * 60)) % 60);
-    const timeTakenHours = Math.floor(timeTakenMs / (1000 * 60 * 60));
-    const timeTakenString = `${timeTakenHours} hours, ${timeTakenMinutes} minutes, ${timeTakenSeconds} seconds`;
+    console.log("created on " , emergency.createdOn);
+    const resolvedOn = Date.now();
+    console.log("resolvedOn is ", resolvedOn);
+    const timeTakenMs = differenceInMilliseconds(resolvedOn, emergency.createdOn)/1000;
+    
+    console.log(timeTakenMs);
     const updatedEmergency = await SOS.findOneAndUpdate(
       { _id: id },
       {
         status: "Resolved",
-        sensitivity: sensitivity,
-        description: description,
-        resolvedOn: resolvedOnIndianTime,
-        timeTaken: timeTakenString,
-        respondedBy: respondedBy,
+        sensitivity,
+        description,
+        resolvedOn: resolvedOn,
+        timeTaken: timeTakenMs,
+        respondedBy,
       },
       { new: true }
-    ).exec();
-    // update the emergency in redis
-    if (!client.isOpen) throw new Error("Redis client is not open");
-    await client.set(
-      "emergency:" + updatedEmergency._id,
-      updatedEmergency,
-      { EX: 7776000 },
-      (err, res) => {
-        if (err) {
-          console.log("error in setting redis key", err);
-          throw new Error("Redis client error" , err);
-        }
-      }
+    ).lean().exec();
+
+    const user = await User.findOne({ email : emergency.email });
+    sendNotification(
+      user.deviceToken,
+      "Emergency Resolved - control room",
+      `Your emergency has been resolved by ${respondedBy} in ${parseInt(timeTakenMs/60)} minutes`,
     );
 
-    return { status: 200, data: { updatedEmergency } };
+    if (updatedEmergency) {
+      await client.set(
+        `emergency:${updatedEmergency._id}`,
+        JSON.stringify(updatedEmergency),
+        'EX',
+        7776000
+      );
+    }
+
+    return { status: 200, data: updatedEmergency };
   } catch (error) {
-    console.log("resolve emergency ", error); 
+    console.error("Resolve emergency error:", error);
     return { status: 500, message: error.message };
   }
 };
-
 module.exports = {
   initiateEmergency,
   updateStatus,

@@ -22,14 +22,14 @@ const sosSchema = new Schema({
     },
    
     createdOn: {
-        type: String,
-        default: new Date().toLocaleString('en-IN') // Store current time
+        type: Date,
+        default: Date.now,
     },
     resolvedOn: {
-        type: String,
+        type: Date,
     },
     timeTaken: {
-        type: String,
+        type: Number,
     },
     description: String,
     sensitivity: {

@@ -9,13 +9,21 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const fs = require("fs");
 const path = require("path");
 const { client } = require("./redis");
+const sendNotification = require("./src/middlewares/helpers/notification");
 
 // Load environment variables
 require("dotenv").config();
 
 const app = express();
 const httpServer = http.createServer(app);
-
+// const io = new http.Server(httpServer);
+// io.listen(4000)
+// io.on('connection', (socket) => {  
+//     console.log('A user connected');  
+//     socket.on('disconnect', () => {  
+//         console.log('User disconnected');  
+//     });  
+// });  
 // Middleware
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));

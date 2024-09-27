@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../../../models/user.schema");
 const { OAuth2Client } = require("google-auth-library");
 const { id } = require("date-fns/locale");
+const sendNotification = require("../../../middlewares/helpers/notification");
 
 const signUpWithPassword = async ({ body }) => {
   try {
@@ -222,10 +223,22 @@ const updateProfile = async ({ body }) => {
   }
 };
 
+const notificationAPI = async ({ body }) => {
+  try {
+    const { token , title , message , lat, long }  = body;
+    sendNotification(token , title , message , lat , long);
+    return { status: 200, message: "Notification sent successfully" };
+  }
+  catch(error){
+    console.log("notification ", error);
+    return { status: 500, message: error.message };
+  }
+}
 module.exports = {
   signUpWithPassword,
   loginWithPassword,
   loginWithGoogle,
   updatePassword,
   updateProfile,
+  notificationAPI
 };

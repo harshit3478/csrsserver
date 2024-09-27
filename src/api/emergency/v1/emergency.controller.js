@@ -3,6 +3,7 @@ const emergencyServices = require('./emergency.services');
 
 const createEmergency = async (req, res) => {
     try {
+        console.log('req body is:', req.body);
         const result = await emergencyServices.initiateEmergency(req);
         if (result.status && result.status !== 200) {
         return responses.generateResponse(
