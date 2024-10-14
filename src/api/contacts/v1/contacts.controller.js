@@ -6,7 +6,7 @@ const addContact = async (req, res) => {
     try {
       const result = await contactServices.addContact(req);
       if (result.status && result.status !== 200) {
-        return response.generateResponse(
+        return responses.generateResponse(
           res,
           false,
           result.message,
@@ -44,7 +44,7 @@ const addContact = async (req, res) => {
         try {
             const result = await contactServices.deleteContact(req);
             if (result.status && result.status !== 200) {
-                return response.generateResponse(
+                return responses.generateResponse(
                 res,
                 false,
                 result.message,
@@ -62,7 +62,7 @@ const addContact = async (req, res) => {
         try {
             const result = await contactServices.updateContacts(req);
             if (result.status && result.status !== 200) {
-                return response.generateResponse(
+                return responses.generateResponse(
                 res,
                 false,
                 result.message,
