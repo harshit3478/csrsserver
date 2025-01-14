@@ -25,13 +25,13 @@ const initiateEmergency = async ({ body }) => {
       status: "Pending",
     });
     // put this emergency in the redis for 90 days
-    if (!client.isOpen) throw new Error("Redis client is not open");
-    await client.set(
-      "emergency:" + emergency._id,
-      JSON.stringify(emergency),
-      "EX",
-      7776000
-    );
+    // if (!client.isOpen) throw new Error("Redis client is not open");
+    // await client.set(
+    //   "emergency:" + emergency._id,
+    //   JSON.stringify(emergency),
+    //   "EX",
+    //   7776000
+    // );
     
     if (io) {
       // const newEmergency = {...emergency , user}
@@ -39,6 +39,17 @@ const initiateEmergency = async ({ body }) => {
       console.log("emergency created and emitted");
     } else {
       console.log("Socket.io is not initialized or emit is not a function");
+    }
+    // search for contacts of the user and send them notification
+    const contacts = await Contact.find({ userId: user._id });
+    console.log("contacts are ", contacts);
+    for (let i = 0; i < contacts.length; i++) {
+      if (contacts[i].deviceToken)
+      sendNotification(
+        contacts[i].deviceToken,
+        "Emergency Alert",
+        `Your friend ${user.name} has raised an emergency alert. Please check on them`
+      );
     }
     return { status: 200, data: emergency };
   } catch (error) {
@@ -165,14 +176,14 @@ const resolveEmergency = async ({ body }) => {
       `Your emergency has been resolved by ${respondedBy} in ${parseInt(timeTakenMs/60)} minutes`,
     );
 
-    if (updatedEmergency) {
-      await client.set(
-        `emergency:${updatedEmergency._id}`,
-        JSON.stringify(updatedEmergency),
-        'EX',
-        7776000
-      );
-    }
+    // if (updatedEmergency) {
+    //   await client.set(
+    //     `emergency:${updatedEmergency._id}`,
+    //     JSON.stringify(updatedEmergency),
+    //     'EX',
+    //     7776000
+    //   );
+    // }
 
     return { status: 200, data: updatedEmergency };
   } catch (error) {
