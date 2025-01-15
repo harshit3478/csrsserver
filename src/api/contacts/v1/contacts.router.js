@@ -64,8 +64,6 @@ router.post('/add', validator(contactSchemas.addContact , 'body'), contactContro
  *             properties:
  *               id:
  *                 type: string
- *               phone:
- *                 type: string
  *     responses:
  *       default:
  *         description: default response

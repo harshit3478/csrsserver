@@ -78,8 +78,7 @@ const contactSchemas = {
         id: Joi.string().required(),
     }),
     deleteContact: Joi.object({
-        id: Joi.string().required(),
-        phone: Joi.string().required()
+        id: Joi.string().required()
     })  
 }
 
