@@ -46,7 +46,7 @@ const options = {
         description: "Development server",
       },
       {
-        url: `http://13.201.246.48:${process.env.PORT || 8001}`,
+        url: "https://datsolcsrs.live",
         description: "Production server",
       },
     ],

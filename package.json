@@ -44,8 +44,7 @@
     "serverless-http": "^3.2.0",
     "socket.io": "^4.7.4",
     "speakeasy": "^2.0.0",
-    "swagger": "^0.0.1",
-    "tailwindcss": "^3.3.6"
+    "swagger": "^0.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.4",
