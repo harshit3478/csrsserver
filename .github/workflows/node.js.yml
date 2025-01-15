@@ -10,13 +10,11 @@ on:
 
 jobs:
   build:
-
     runs-on: self-hosted
 
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
@@ -25,9 +23,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
     - run: npm cache clean --force
     - run: npm i
     - run: |
        touch .env
        echo "${{secrets.PROD_ENV_FILE}}" > .env
-    - run: pm2 restart csrsserver
+    - run: |
+        source ~/.nvm/nvm.sh
+        pm2 restart csrsserver
+
