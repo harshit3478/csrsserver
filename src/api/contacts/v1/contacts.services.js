@@ -3,7 +3,7 @@ const { User } = require("../../../models/user.schema");
 
 const addContact = async ({ body }) => {
   try {
-    const { id, name, phone } = body;
+    let { id, name, phone } = body;
     const  doesExist = await User.findOne({ _id: id });
     if (!doesExist) {
       return { status: 400, message: "User does not exist" };
@@ -15,6 +15,7 @@ const addContact = async ({ body }) => {
     }
     // convert the phone number to indian 10 digit format 
     // and remove any special characters and spaces
+    
     phone = phone.replace(/[^0-9]/g, "");
     if (phone.length > 10) {
       phone = phone.slice(phone.length - 10);
@@ -22,6 +23,7 @@ const addContact = async ({ body }) => {
     if (phone.length < 10) {
       return { status: 400, message: "Invalid phone number" };
     }
+    console.log("final phone :" , phone)
     
     const user = await User.findOne({ phone: phone });
     if (user) {
