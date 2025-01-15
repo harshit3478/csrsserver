@@ -4,17 +4,25 @@ const { User } = require("../../../models/user.schema");
 const addContact = async ({ body }) => {
   try {
     const { id, name, phone } = body;
-
     const  doesExist = await User.findOne({ _id: id });
     if (!doesExist) {
       return { status: 400, message: "User does not exist" };
     }
-
+    
     const contactExist = await Contact.findOne({ userId: id, phone: phone });
     if (contactExist) {
       return { status: 400, message: "Contact already exists" };
     }
-
+    // convert the phone number to indian 10 digit format 
+    // and remove any special characters and spaces
+    phone = phone.replace(/[^0-9]/g, "");
+    if (phone.length > 10) {
+      phone = phone.slice(phone.length - 10);
+    }
+    if (phone.length < 10) {
+      return { status: 400, message: "Invalid phone number" };
+    }
+    
     const user = await User.findOne({ phone: phone });
     if (user) {
       const contact = await Contact.create({
@@ -54,8 +62,8 @@ const getContacts = async ({ body }) => {
 
 const deleteContact = async ({ body }) => {
     try {
-        const { id, phone } = body;
-        const contact = await Contact.findOneAndDelete({ userId: id, phone: phone });
+        const { id } = body;
+        const contact = await Contact.findOneAndDelete({ _id : id });
         if (!contact) {
             return { status: 400, message: "Contact does not exist" };
         }
