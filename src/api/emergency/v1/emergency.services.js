@@ -91,19 +91,6 @@ const updateStatus = async ({ body }) => {
 
 const getEmergencies = async () => {
   try {
-    // check if redis has stored the emergencies or not if yes then return them
-    if (!client.isOpen) throw new Error("Redis client is not open");
-    // not every key is for emergency so we need to check the value of the key
-  const emergenciesInRedis = await client.keys("emergency:*");
-  
-
-    if (emergenciesInRedis.length > 0) {
-      const emergencies = [];
-        for (let i = 0; i < emergenciesInRedis.length; i++) {
-        emergencies.push(emergenciesInRedis[i]);
-      }
-    }
-
     const emergencies = await SOS.find();
     // add user details to each emergency
     for (let i = 0; i < emergencies.length; i++) {
